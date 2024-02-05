@@ -24,3 +24,5 @@ app.get("/about-us", (req, res) => {
 app.use((req, res) => {
   res.status(404).sendFile("./viwes/404.html", { root: __dirname });
 });
+
+// post request send data from frontend to backend
