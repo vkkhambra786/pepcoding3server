@@ -24,10 +24,14 @@ userRouter
 
 userRouter.route("/:id").get(getUserById);
 
-authRouter.route("/signup").get(getSignup).post(postSignUp);
+authRouter.route("/signup").get(middleware, getSignup).post(postSignUp);
 
+function middleware(req, res, next) {
+  console.log("middleware Encountered");
+  next();
+}
 function getSignup(req, res) {
-  console.log(req.query);
+  console.log("getSignUp Called ", req.query);
   res.sendFile("/public/signUp.html", { root: __dirname });
 }
 
