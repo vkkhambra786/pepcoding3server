@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const emailValidator = require("email-validator");
 const app = express();
 app.use(express.json()); // global middleware
 app.listen(3000, console.log("server running at nodemon SignUp/app.js 3000"));
@@ -128,11 +129,35 @@ mongoose
 
 const userSchema = mongoose.Schema({
   name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    validate: function () {
+      return emailValidator.validate(this.email);
+    },
+  },
   password: { type: String, required: true },
-  confirmPassword: { type: String, required: true },
+  confirmPassword: {
+    type: String,
+    required: true,
+    // i don't want to save confirm passowrd in db
+    validate: function () {
+      return this.confirmPassword == this.password;
+    },
+  },
+});
+userSchema.pre("save", function () {
+  console.log("Before save in DB");
 });
 
+userSchema.pre("save", function () {
+  // I wan to hise the confirmPassword from db
+  this.confirmPassword = undefined;
+});
+userSchema.post("save", function () {
+  console.log("After save in DB");
+});
 const User = mongoose.model("User", userSchema);
 
 async function createUser() {
