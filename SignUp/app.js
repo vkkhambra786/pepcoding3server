@@ -1,6 +1,7 @@
+//import { User } from "./model/userModel";
+const User = require("./model/userModel");
 const express = require("express");
-const mongoose = require("mongoose");
-const emailValidator = require("email-validator");
+
 const app = express();
 app.use(express.json()); // global middleware
 app.listen(3000, console.log("server running at nodemon SignUp/app.js 3000"));
@@ -114,60 +115,4 @@ function getUserById(req, res) {
     message: "Data Recived",
     data: obj,
   });
-}
-
-const db_link =
-  "mongodb+srv://vkkhambra786:Vikas123@cluster0.l8s5sug.mongodb.net/";
-mongoose
-  .connect(db_link)
-  .then(function (db) {
-    console.log("DB Connected");
-  })
-  .catch(function (err) {
-    console.log(err);
-  });
-
-const userSchema = mongoose.Schema({
-  name: { type: String, required: true },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    validate: function () {
-      return emailValidator.validate(this.email);
-    },
-  },
-  password: { type: String, required: true },
-  confirmPassword: {
-    type: String,
-    required: true,
-    // i don't want to save confirm passowrd in db
-    validate: function () {
-      return this.confirmPassword == this.password;
-    },
-  },
-});
-userSchema.pre("save", function () {
-  console.log("Before save in DB");
-});
-
-userSchema.pre("save", function () {
-  // I wan to hise the confirmPassword from db
-  this.confirmPassword = undefined;
-});
-userSchema.post("save", function () {
-  console.log("After save in DB");
-});
-const User = mongoose.model("User", userSchema);
-
-async function createUser() {
-  let user = {
-    name: "Garuda23",
-    email: "kill789@gmail.com",
-    password: "567890",
-    confirmPassword: "567890",
-  };
-
-  //   let data = await User.create(user);
-  //   console.log(data);
 }
