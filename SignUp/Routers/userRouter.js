@@ -1,9 +1,10 @@
 const express = require("express");
 const userRouter = express.Router();
 const User = require("../model/userModel");
+const protectRoute = require("./authMiddleware");
 userRouter
   .route("/")
-  .get(getUser) // path specific midlleware
+  .get(protectRoute, getUser) // path specific midlleware
   .post(postUser)
   .patch(patchUser)
   .delete(deleteUSer);

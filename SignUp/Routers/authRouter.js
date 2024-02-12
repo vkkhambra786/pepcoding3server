@@ -2,6 +2,7 @@ const express = require("express");
 
 const User = require("../model/userModel");
 const authRouter = express.Router();
+
 authRouter
   .route("/signup")
   .get(middleware1, getSignup, middleware2)
@@ -35,17 +36,14 @@ async function postSignUp(req, res) {
 
 async function loginUser(req, res) {
   try {
-    debugger;
     let data = req.body;
     console.log("data", data);
     if (data.email) {
       let user = await User.findOne({ email: data.email });
-      debugger;
-      console.log("user", user);
+
       if (user) {
-        console.log("user1", user);
-        console.log("user.pass", user.password);
-        console.log("data.passs", data.password);
+        res.cookie("isLoggedIn", true, { httpOnly: true });
+
         if (user.password == data.password) {
           return res.json({
             message: "User has logged In",
