@@ -1,11 +1,11 @@
 //import { User } from "./model/userModel";
 const User = require("./model/userModel");
 const express = require("express");
-
+const cookieParser = require("cookie-parser");
 const app = express();
 app.use(express.json()); // global middleware
 app.listen(3000, console.log("server running at nodemon SignUp/app.js 3000"));
-
+app.use(cookieParser());
 //let users = {};
 // let users = [
 //   { id: 1, Name: "Abhisekh" },
@@ -24,6 +24,9 @@ userRouter
   .patch(patchUser)
   .delete(deleteUSer);
 
+userRouter.route("/getCookies").get(getCookies);
+
+userRouter.route("/setCookies").get(setCookies);
 userRouter.route("/:id").get(getUserById);
 
 authRouter
@@ -115,4 +118,24 @@ function getUserById(req, res) {
     message: "Data Recived",
     data: obj,
   });
+}
+
+function setCookies(req, res) {
+  //res.setHeader("Set-Cookie", "isLoggedIn=true");
+  // httpOnly true used can't access cookie from frontend
+  res.cookie("isLoggedIn", true, {
+    maxAge: 1000 * 60 * 60 * 60 * 24,
+    secure: true,
+    httpOnly: true,
+  });
+
+  // this isnot secure cookie we acces from frontend document.cookie()
+  res.cookie("isSecureCheck", true, { maxAge: 1000 * 60 * 60 * 60 * 2 });
+  res.send("Cookies has been set");
+}
+
+function getCookies(req, res) {
+  let cookies = req.cookies;
+  console.log("cookies", cookies);
+  res.send("Cookie Recieved");
 }
