@@ -7,6 +7,7 @@ authRouter
   .get(middleware1, getSignup, middleware2)
   .post(postSignUp);
 
+authRouter.route("/login").post(loginUser);
 function middleware1(req, res, next) {
   console.log("middleware1 Encountered");
   next();
@@ -32,4 +33,44 @@ async function postSignUp(req, res) {
   });
 }
 
+async function loginUser(req, res) {
+  try {
+    debugger;
+    let data = req.body;
+    console.log("data", data);
+    if (data.email) {
+      let user = await User.findOne({ email: data.email });
+      debugger;
+      console.log("user", user);
+      if (user) {
+        console.log("user1", user);
+        console.log("user.pass", user.password);
+        console.log("data.passs", data.password);
+        if (user.password == data.password) {
+          return res.json({
+            message: "User has logged In",
+            userDetails: data,
+          });
+        } else {
+          res.json({
+            message: "Credentials are wrong",
+          });
+        }
+      } else {
+        res.json({
+          message: "User not avaiabbale",
+        });
+      }
+    } else {
+      res.json({
+        message: "Email and Password required",
+      });
+    }
+  } catch (error) {
+    console.log("error", error);
+    return res.json({
+      message: error.message,
+    });
+  }
+}
 module.exports = authRouter;
