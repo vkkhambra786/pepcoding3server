@@ -2,7 +2,8 @@ const express = require("express");
 
 const User = require("../model/userModel");
 const authRouter = express.Router();
-
+const jwt = require("jsonwebtoken");
+const JWT_KEY = "fegg34343uhgtugghijgokek";
 authRouter
   .route("/signup")
   .get(middleware1, getSignup, middleware2)
@@ -42,8 +43,11 @@ async function loginUser(req, res) {
       let user = await User.findOne({ email: data.email });
 
       if (user) {
-        res.cookie("isLoggedIn", true, { httpOnly: true });
+        //  res.cookie("isLoggedIn", true, { httpOnly: true });
+        let uid = user["_id"];
+        let token = jwt.sign({ payload: uid }, JWT_KEY);
 
+        res.cookie("login", token, { httpOnly: true });
         if (user.password == data.password) {
           return res.json({
             message: "User has logged In",
