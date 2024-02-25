@@ -26,12 +26,18 @@ const userSchema = mongoose.Schema({
   password: { type: String, required: true },
   confirmPassword: {
     type: String,
-    required: true,
+    required: false,
     // i don't want to save confirm passowrd in db
     validate: function () {
       return this.confirmPassword == this.password;
     },
   },
+  role: {
+    type: String,
+    enum: ["Admin", "User", "RestOwner", "DeliveryBoy"],
+    default: "RestOwner",
+  },
+  profileImage: { type: String, default: "img/users/default.png" },
 });
 userSchema.pre("save", function () {
   console.log("Before save in DB");

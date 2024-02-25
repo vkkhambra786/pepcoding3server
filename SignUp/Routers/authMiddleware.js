@@ -6,22 +6,22 @@
 // check loginUser then it will work  res.cookie("isLoggedIn", true, { httpOnly: true });
 const jwt = require("jsonwebtoken");
 const JWT_KEY = "fegg34343uhgtugghijgokek";
-function protectRoute(req, res, next) {
-  if (req.cookies.login) {
-    let isVerified = jwt.verify(req.cookies.login, JWT_KEY);
-    if (isVerified) {
-      next();
-    } else {
-      return res.json({
-        message: "User Not Verified ",
-      });
-    }
-  } else {
-    return res.json({
-      message: "User need to logged In First ",
-    });
-  }
-}
+// function protectRoute(req, res, next) {
+//   if (req.cookies.login) {
+//     let isVerified = jwt.verify(req.cookies.login, JWT_KEY);
+//     if (isVerified) {
+//       next();
+//     } else {
+//       return res.json({
+//         message: "User Not Verified ",
+//       });
+//     }
+//   } else {
+//     return res.json({
+//       message: "User need to logged In First ",
+//     });
+//   }
+// }
 
 // function protectRoute(req, res, next) {
 //     if (req.cookies.isLoggedIn) {

@@ -4,12 +4,10 @@ const User = require("../model/userModel");
 const authRouter = express.Router();
 const jwt = require("jsonwebtoken");
 const JWT_KEY = "fegg34343uhgtugghijgokek";
-authRouter
-  .route("/signup")
-  .get(middleware1, getSignup, middleware2)
-  .post(postSignUp);
+//const loginUser = require("../controllers/authController");
+authRouter.route("/signup").get(middleware1, getSignup, middleware2);
 
-authRouter.route("/login").post(loginUser);
+//.route("/login").post(loginUser);
 function middleware1(req, res, next) {
   console.log("middleware1 Encountered");
   next();
@@ -24,55 +22,4 @@ function getSignup(req, res, next) {
   next();
 }
 
-async function postSignUp(req, res) {
-  let dataObj = req.body;
-
-  let user = await User.create(dataObj);
-  console.log(user);
-  res.json({
-    message: "User Successfully SignUp",
-    data: user,
-  });
-}
-
-async function loginUser(req, res) {
-  try {
-    let data = req.body;
-    console.log("data", data);
-    if (data.email) {
-      let user = await User.findOne({ email: data.email });
-
-      if (user) {
-        //  res.cookie("isLoggedIn", true, { httpOnly: true });
-        let uid = user["_id"];
-        let token = jwt.sign({ payload: uid }, JWT_KEY);
-
-        res.cookie("login", token, { httpOnly: true });
-        if (user.password == data.password) {
-          return res.json({
-            message: "User has logged In",
-            userDetails: data,
-          });
-        } else {
-          res.json({
-            message: "Credentials are wrong",
-          });
-        }
-      } else {
-        res.json({
-          message: "User not avaiabbale",
-        });
-      }
-    } else {
-      res.json({
-        message: "Email and Password required",
-      });
-    }
-  } catch (error) {
-    console.log("error", error);
-    return res.json({
-      message: error.message,
-    });
-  }
-}
 module.exports = authRouter;
