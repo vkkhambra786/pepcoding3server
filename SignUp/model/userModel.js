@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 const emailValidator = require("email-validator");
 const bcrypt = require("bcrypt");
-
+const { use } = require("../Routers/userRouter");
+const crypto = require("crypto");
 const db_link =
   "mongodb+srv://vkkhambra786:Vikas123@cluster0.l8s5sug.mongodb.net/";
 mongoose
@@ -38,6 +39,7 @@ const userSchema = mongoose.Schema({
     default: "RestOwner",
   },
   profileImage: { type: String, default: "img/users/default.png" },
+  resetToken: String,
 });
 userSchema.pre("save", function () {
   console.log("Before save in DB");
@@ -58,6 +60,22 @@ userSchema.pre("save", async function () {
   console.log("hashedString", hashedString);
   this.password = hashedString;
 });
+
+userSchema.methods.createResetToken = function () {
+  // cretae for using new token
+  const resetToken = crypto.randomBytes(32).toString("hex");
+
+  this.resetToken = resetToken;
+  return resetToken;
+};
+
+userSchema.methods.resetPasswordHandler = function (passowrd, confirmPassword) {
+  this.passowrd = passowrd;
+  this.confirmPassword = confirmPassword;
+
+  this.resetToken = undefined;
+};
+
 const User = mongoose.model("User", userSchema);
 module.exports = User;
 async function createUser() {

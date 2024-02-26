@@ -74,6 +74,62 @@ module.exports.loginUser = async function loginUser(req, res) {
   }
 };
 
+// forgot Password
+
+module.exports.forgotPassword = async function forgotPassword(req, res) {
+  try {
+    let { email } = req.body;
+    console.log("data", email);
+
+    let user = await User.findOne({ email: email });
+
+    if (user) {
+      console.log("user", user);
+
+      const resetToken = user.createResetToken();
+      let resetPasswordLink = `${req.protocol}://${req.get(
+        "host"
+      )}/resetPassword/${req.resetToken}`;
+    } else {
+      res.json({
+        message: "User not available",
+      });
+    }
+  } catch (error) {
+    console.log("error", error);
+    return res.json({
+      message: error.message,
+    });
+  }
+};
+
+// reset Password
+module.exports.resetPassword = async function resetPassword(req, res) {
+  try {
+    let token = req.params.token;
+    let { password, confirmPassword } = req.body;
+
+    let user = await User.findOne({ resetToken: token });
+
+    if (user) {
+      user.resetPasswordHandler(password, confirmPassword);
+      await user.save();
+      res.json({
+        message: "Password Changed Successfully",
+      });
+    } else {
+      res.json({
+        message: "User not Found for reset Password",
+      });
+    }
+  } catch (error) {
+    console.log("error", error);
+    return res.json({
+      message: error.message,
+    });
+  }
+};
+
 // isAuthorised check User Role
 
 module.exports.isAuthorised = function isAuthorised(roles) {
@@ -109,6 +165,11 @@ module.exports.protectRoute = async function protectRoute(req, res, next) {
         });
       }
     } else {
+      const client = req.get("User-Agent");
+
+      if (client.includes("Mozilla") == true) {
+        return res.redirect("/login");
+      }
       return res.json({
         message: "User need to logged In First auhtController file",
       });
@@ -118,4 +179,11 @@ module.exports.protectRoute = async function protectRoute(req, res, next) {
       message: error.message,
     });
   }
+};
+
+module.exports.logout = function logout(req, res) {
+  res.cookie("login", "", { maxAge: 1 });
+  return res.json({
+    message: "User Logout via cookies  Successfully",
+  });
 };

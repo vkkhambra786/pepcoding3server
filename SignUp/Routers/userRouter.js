@@ -16,6 +16,9 @@ const {
   postSignUp,
   protectRoute,
   isAuthorised,
+  forgotPassword,
+  resetPassword,
+  logout,
 } = require("../controllers/authController");
 // userRouter
 //   .route("/")
@@ -32,7 +35,12 @@ const {
 userRouter.route("/:id").patch(patchUser).delete(deleteUSer);
 userRouter.route("/signup").post(postSignUp);
 userRouter.route("/login").post(loginUser);
+userRouter.route("/forgotPassword").post(forgotPassword);
+userRouter.route("/resetPassword/:token").post(resetPassword);
+userRouter.route("/logout").get(logout);
+
 userRouter.use(protectRoute);
+
 //userRouter.get("/users/:id", getUser);
 userRouter.route("/:id").get(getUser);
 userRouter.use(isAuthorised(["Admin"]));
