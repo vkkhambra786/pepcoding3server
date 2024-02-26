@@ -44,7 +44,7 @@ module.exports = Plan;
 
 (async function createPlan() {
   let user = {
-    name: "SuperFood",
+    name: "SuperFood23",
     duration: 30,
     price: 1000,
     ratingAverage: 3,
