@@ -15,8 +15,9 @@ app.use(cookieParser());
 
 const userRouter = require("./Routers/userRouter");
 const authRouter = require("./Routers/authRouter");
+const planRouter = require("./Routers/planRouter");
 app.use("/users", userRouter);
 app.use("/auth", authRouter);
-
+app.use("/plans", planRouter);
 // when i require plan then planSchema and plan DB connect and send data in db via createplan fucntion
-const plan = require("./model/planModel");
+//const plan = require("./model/planModel");

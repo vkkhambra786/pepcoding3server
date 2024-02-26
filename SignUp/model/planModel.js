@@ -42,15 +42,15 @@ const planSchema = mongoose.Schema({
 const Plan = mongoose.model("Plan", planSchema);
 module.exports = Plan;
 
-(async function createPlan() {
-  let user = {
-    name: "SuperFood23",
-    duration: 30,
-    price: 1000,
-    ratingAverage: 3,
-    discount: 20,
-  };
+// (async function createPlan() {
+//   let user = {
+//     name: "SuperFood23",
+//     duration: 30,
+//     price: 1000,
+//     ratingAverage: 3,
+//     discount: 20,
+//   };
 
-  let data = await Plan.create(user);
-  console.log(data);
-})();
+//   let data = await Plan.create(user);
+//   console.log(data);
+// })();
