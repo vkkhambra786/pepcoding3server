@@ -5,11 +5,13 @@ const User = require("../model/userModel");
 const jwt = require("jsonwebtoken");
 const JWT_KEY = "fegg34343uhgtugghijgokek";
 const bcrypt = require("bcrypt");
+const { sendMail } = require("../utility/nodeMailer");
 module.exports.postSignUp = async function postSignUp(req, res) {
   try {
     let dataObj = req.body;
 
     let user = await User.create(dataObj);
+    sendMail("signup", user);
     console.log(user);
     if (user) {
       return res.json({
@@ -90,6 +92,12 @@ module.exports.forgotPassword = async function forgotPassword(req, res) {
       let resetPasswordLink = `${req.protocol}://${req.get(
         "host"
       )}/resetPassword/${req.resetToken}`;
+
+      let obj = {
+        resetPasswordLink: resetPasswordLink,
+        email: email,
+      };
+      sendMail("resetpassword", obj);
     } else {
       res.json({
         message: "User not available",
