@@ -189,3 +189,32 @@ module.exports.getCookies = function getCookies(req, res) {
   console.log("cookies", cookies);
   res.send("Cookie Recieved");
 };
+
+module.exports.updateProfileImage = async function updateProfileImage(
+  req,
+  res
+) {
+  //res.send(users);
+  res.json({
+    message: "File Uploaded Successfully",
+  });
+  // try {
+  //   let id = req.params.id;
+  //   // let user = await User.findOneAndDelete({ email: "kill789@gmail.com" });
+  //   let user = await User.findByIdAndDelete(id);
+
+  //   if (!user) {
+  //     res.json({
+  //       message: "User Not Found",
+  //     });
+  //   }
+  //   res.json({
+  //     message: "User Deleted Successfully",
+  //     data: user,
+  //   });
+  // } catch (error) {
+  //   res.json({
+  //     message: error.message,
+  //   });
+  // }
+};
